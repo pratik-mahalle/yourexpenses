@@ -1,14 +1,38 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import Dashboard from './Dashboard';
+import { Skeleton } from '@/components/ui/skeleton';
 
-const Index = () => {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+export default function Index() {
+  const navigate = useNavigate();
+  const { user, profile, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading) {
+      if (!user) {
+        navigate('/auth');
+      } else if (user && !profile?.household_id) {
+        navigate('/onboarding');
+      }
+    }
+  }, [user, profile, loading, navigate]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="space-y-4 w-full max-w-md px-4">
+          <Skeleton className="h-12 w-full" />
+          <Skeleton className="h-32 w-full" />
+          <Skeleton className="h-8 w-2/3" />
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
 
-export default Index;
+  if (!user || !profile?.household_id) {
+    return null;
+  }
+
+  return <Dashboard />;
+}
