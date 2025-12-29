@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { format, startOfMonth, addMonths, subMonths } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useExpenses } from '@/hooks/useExpenses';
+import { useRecurringExpenses } from '@/hooks/useRecurringExpenses';
 import { Header } from '@/components/layout/Header';
 import { BottomNav } from '@/components/layout/BottomNav';
 import { QuickStats } from '@/components/dashboard/QuickStats';
@@ -10,8 +11,11 @@ import { BudgetProgress } from '@/components/dashboard/BudgetProgress';
 import { ExpenseList } from '@/components/expenses/ExpenseList';
 import { BudgetSettings } from '@/components/budget/BudgetSettings';
 import { AIInsights } from '@/components/insights/AIInsights';
+import { RecurringExpenseList } from '@/components/recurring/RecurringExpenseList';
+import { AddRecurringExpenseDialog } from '@/components/recurring/AddRecurringExpenseDialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -25,6 +29,7 @@ export default function Dashboard() {
     fetchExpenses,
     fetchBudgets
   } = useExpenses();
+  const { recurringExpenses, loading: recurringLoading } = useRecurringExpenses();
 
   const summary = getSpendingSummary();
   const totalSpent = getTotalSpent();
@@ -147,6 +152,21 @@ export default function Dashboard() {
             </div>
             <BudgetSettings />
             <BudgetProgress data={summary} />
+            
+            {/* Recurring Expenses Section */}
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="text-lg">Recurring Expenses</CardTitle>
+                <AddRecurringExpenseDialog />
+              </CardHeader>
+              <CardContent className="p-0 pb-4 px-4">
+                {recurringLoading ? (
+                  <Skeleton className="h-24 rounded-lg" />
+                ) : (
+                  <RecurringExpenseList expenses={recurringExpenses} />
+                )}
+              </CardContent>
+            </Card>
           </div>
         )}
 

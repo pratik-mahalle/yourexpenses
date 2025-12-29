@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { TrendingUp, TrendingDown, DollarSign, Target } from 'lucide-react';
+import { TrendingUp, TrendingDown, IndianRupee, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface QuickStatsProps {
@@ -15,21 +15,21 @@ export function QuickStats({ totalSpent, totalBudget, expenseCount }: QuickStats
   const stats = [
     {
       label: 'Total Spent',
-      value: `$${totalSpent.toFixed(2)}`,
-      icon: DollarSign,
+      value: `₹${totalSpent.toFixed(2)}`,
+      icon: IndianRupee,
       color: 'bg-primary/10 text-primary',
       iconColor: 'text-primary'
     },
     {
       label: 'Total Budget',
-      value: `$${totalBudget.toFixed(2)}`,
+      value: `₹${totalBudget.toFixed(2)}`,
       icon: Target,
       color: 'bg-secondary/10 text-secondary',
       iconColor: 'text-secondary'
     },
     {
       label: 'Remaining',
-      value: `$${Math.abs(remaining).toFixed(2)}`,
+      value: `₹${Math.abs(remaining).toFixed(2)}`,
       icon: remaining >= 0 ? TrendingDown : TrendingUp,
       color: remaining >= 0 ? 'bg-success/10 text-success' : 'bg-destructive/10 text-destructive',
       iconColor: remaining >= 0 ? 'text-success' : 'text-destructive',

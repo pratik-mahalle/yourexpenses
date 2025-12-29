@@ -50,10 +50,10 @@ export function BudgetProgress({ data }: BudgetProgressProps) {
                     isOverBudget && "text-destructive",
                     isNearLimit && "text-warning"
                   )}>
-                    ${item.total_spent.toFixed(0)}
+                    ₹{item.total_spent.toFixed(0)}
                   </span>
                   <span className="text-muted-foreground">
-                    {' '}/ ${item.budget_amount.toFixed(0)}
+                    {' '}/ ₹{item.budget_amount.toFixed(0)}
                   </span>
                 </div>
               </div>
@@ -74,7 +74,7 @@ export function BudgetProgress({ data }: BudgetProgressProps) {
               </div>
               {isOverBudget && (
                 <p className="text-xs text-destructive">
-                  Over budget by ${(item.total_spent - item.budget_amount).toFixed(2)}
+                  Over budget by ₹{(item.total_spent - item.budget_amount).toFixed(2)}
                 </p>
               )}
             </div>

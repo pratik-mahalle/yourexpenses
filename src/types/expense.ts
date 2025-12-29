@@ -35,6 +35,22 @@ export interface Budget {
   category?: Category;
 }
 
+export interface RecurringExpense {
+  id: string;
+  household_id: string;
+  user_id: string;
+  category_id: string;
+  amount: number;
+  description: string;
+  notes: string | null;
+  day_of_month: number;
+  is_active: boolean;
+  last_generated_month: string | null;
+  created_at: string;
+  updated_at: string;
+  category?: Category;
+}
+
 export interface Profile {
   id: string;
   email: string | null;

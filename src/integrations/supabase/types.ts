@@ -223,6 +223,73 @@ export type Database = {
           },
         ]
       }
+      recurring_expenses: {
+        Row: {
+          amount: number
+          category_id: string
+          created_at: string
+          day_of_month: number
+          description: string
+          household_id: string
+          id: string
+          is_active: boolean
+          last_generated_month: string | null
+          notes: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          category_id: string
+          created_at?: string
+          day_of_month?: number
+          description: string
+          household_id: string
+          id?: string
+          is_active?: boolean
+          last_generated_month?: string | null
+          notes?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category_id?: string
+          created_at?: string
+          day_of_month?: number
+          description?: string
+          household_id?: string
+          id?: string
+          is_active?: boolean
+          last_generated_month?: string | null
+          notes?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recurring_expenses_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recurring_expenses_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recurring_expenses_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           household_id: string

@@ -79,7 +79,7 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
                     </div>
                     <div className="text-right flex items-center gap-2">
                       <span className="font-semibold text-lg">
-                        ${Number(expense.amount).toFixed(2)}
+                        ₹{Number(expense.amount).toFixed(2)}
                       </span>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
@@ -91,7 +91,7 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
                           <AlertDialogHeader>
                             <AlertDialogTitle>Delete expense?</AlertDialogTitle>
                             <AlertDialogDescription>
-                              This will permanently delete "{expense.description}" (${Number(expense.amount).toFixed(2)}).
+                              This will permanently delete "{expense.description}" (₹{Number(expense.amount).toFixed(2)}).
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
