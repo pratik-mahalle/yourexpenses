@@ -3,7 +3,6 @@ import { useExpenses } from '@/hooks/useExpenses';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Sparkles, TrendingDown, AlertTriangle, Lightbulb, RefreshCw } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 interface Insight {
@@ -18,7 +17,7 @@ export function AIInsights() {
   const [loading, setLoading] = useState(false);
   const [hasGenerated, setHasGenerated] = useState(false);
 
-  const generateInsights = async () => {
+  const generateInsights = () => {
     if (expenses.length === 0) {
       toast.error('Add some expenses first to get insights');
       return;
@@ -26,38 +25,6 @@ export function AIInsights() {
 
     setLoading(true);
     try {
-      const summary = getSpendingSummary();
-      const totalSpent = getTotalSpent();
-      const totalBudget = getTotalBudget();
-
-      const expenseData = {
-        totalSpent,
-        totalBudget,
-        categories: summary.map(s => ({
-          name: s.category_name,
-          spent: s.total_spent,
-          budget: s.budget_amount,
-          percentage: s.percentage
-        })),
-        recentExpenses: expenses.slice(0, 10).map(e => ({
-          description: e.description,
-          amount: e.amount,
-          category: e.category?.name,
-          date: e.date
-        }))
-      };
-
-      const { data, error } = await supabase.functions.invoke('analyze-expenses', {
-        body: { expenseData }
-      });
-
-      if (error) throw error;
-
-      setInsights(data.insights || []);
-      setHasGenerated(true);
-    } catch (error: any) {
-      console.error('Error generating insights:', error);
-      // Generate basic insights locally if AI fails
       generateLocalInsights();
     } finally {
       setLoading(false);
