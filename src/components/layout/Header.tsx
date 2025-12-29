@@ -6,8 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Separator } from '@/components/ui/separator';
 import { Wallet, LogOut, Users, Copy, Check } from 'lucide-react';
 import { toast } from 'sonner';
+import { FamilySpendingProfile } from '@/components/household/FamilySpendingProfile';
 
 export function Header() {
   const { user, profile, signOut } = useAuth();
@@ -68,7 +70,11 @@ export function Header() {
                     Share the invite code with family members
                   </SheetDescription>
                 </SheetHeader>
-                <div className="mt-6 space-y-4">
+                <div className="mt-6 space-y-6">
+                  <FamilySpendingProfile householdId={household.id} />
+                  
+                  <Separator />
+                  
                   <div className="space-y-2">
                     <p className="text-sm font-medium">Invite Code</p>
                     <div className="flex items-center gap-2">
