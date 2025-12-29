@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { format, startOfMonth, addMonths, subMonths } from 'date-fns';
+import { useState, useMemo } from 'react';
+import { format, startOfMonth, addMonths, subMonths, isWithinInterval, parseISO } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useExpenses } from '@/hooks/useExpenses';
 import { useRecurringExpenses } from '@/hooks/useRecurringExpenses';
@@ -13,6 +13,7 @@ import { BudgetSettings } from '@/components/budget/BudgetSettings';
 import { AIInsights } from '@/components/insights/AIInsights';
 import { RecurringExpenseList } from '@/components/recurring/RecurringExpenseList';
 import { AddRecurringExpenseDialog } from '@/components/recurring/AddRecurringExpenseDialog';
+import { ExpenseFilters, ExpenseFiltersState } from '@/components/expenses/ExpenseFilters';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,8 +21,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedMonth, setSelectedMonth] = useState(new Date());
+  const [filters, setFilters] = useState<ExpenseFiltersState>({
+    search: '',
+    categoryId: '',
+    startDate: undefined,
+    endDate: undefined
+  });
   const { 
     expenses, 
+    categories,
     loading, 
     getSpendingSummary, 
     getTotalSpent, 
@@ -34,6 +42,33 @@ export default function Dashboard() {
   const summary = getSpendingSummary();
   const totalSpent = getTotalSpent();
   const totalBudget = getTotalBudget();
+
+  // Filter expenses based on search, category, and date range
+  const filteredExpenses = useMemo(() => {
+    return expenses.filter(expense => {
+      // Search filter
+      if (filters.search) {
+        const searchLower = filters.search.toLowerCase();
+        const matchesSearch = 
+          expense.description.toLowerCase().includes(searchLower) ||
+          expense.category?.name.toLowerCase().includes(searchLower) ||
+          expense.notes?.toLowerCase().includes(searchLower);
+        if (!matchesSearch) return false;
+      }
+
+      // Category filter
+      if (filters.categoryId && filters.categoryId !== 'all') {
+        if (expense.category_id !== filters.categoryId) return false;
+      }
+
+      // Date range filter
+      const expenseDate = parseISO(expense.date);
+      if (filters.startDate && expenseDate < filters.startDate) return false;
+      if (filters.endDate && expenseDate > filters.endDate) return false;
+
+      return true;
+    });
+  }, [expenses, filters]);
 
   const handlePreviousMonth = async () => {
     const newMonth = subMonths(selectedMonth, 1);
@@ -138,7 +173,20 @@ export default function Dashboard() {
                 </Button>
               </div>
             </div>
-            <ExpenseList expenses={expenses} />
+            
+            <ExpenseFilters
+              categories={categories}
+              filters={filters}
+              onFiltersChange={setFilters}
+            />
+            
+            {filteredExpenses.length !== expenses.length && (
+              <p className="text-sm text-muted-foreground">
+                Showing {filteredExpenses.length} of {expenses.length} expenses
+              </p>
+            )}
+            
+            <ExpenseList expenses={filteredExpenses} />
           </div>
         )}
 
