@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { DollarSign, Save } from 'lucide-react';
+import { IndianRupee, Save } from 'lucide-react';
 
 export function BudgetSettings() {
   const { categories, budgets, setBudget } = useExpenses();
@@ -49,7 +49,7 @@ export function BudgetSettings() {
               </Label>
               <div className="flex items-center gap-2 mt-1">
                 <div className="relative flex-1">
-                  <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id={`budget-${category.id}`}
                     type="number"

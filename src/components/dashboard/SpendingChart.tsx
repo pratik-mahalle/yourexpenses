@@ -39,7 +39,7 @@ export function SpendingChart({ data }: SpendingChartProps) {
             <span>{data.icon}</span>
             <span>{data.name}</span>
           </p>
-          <p className="text-lg font-bold">${data.value.toFixed(2)}</p>
+          <p className="text-lg font-bold">₹{data.value.toFixed(2)}</p>
         </div>
       );
     }
