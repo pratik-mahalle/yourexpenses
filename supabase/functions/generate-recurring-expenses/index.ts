@@ -11,6 +11,22 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Verify this is called by an authorized source (cron job or admin)
+    const authHeader = req.headers.get('Authorization')
+    const expectedKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+    
+    // Only allow calls with service role key (from pg_cron/pg_net)
+    if (!authHeader || !authHeader.includes(expectedKey || '')) {
+      console.error('Unauthorized access attempt to generate-recurring-expenses')
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 401 
+        }
+      )
+    }
+
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
